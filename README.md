@@ -1,19 +1,171 @@
 # University Classroom Map
 
-A Java Swing desktop application for viewing a university building's front view and classroom occupancy.
+## 1. Project Overview
 
-## Requirements
+The University Classroom Map is a Java desktop application that presents an imaginative front view of a university building. It helps students and professors quickly browse all floors and determine whether a classroom is occupied or free.
+
+The application uses Java Swing for the graphical interface and a small in-memory model to store classroom numbers, floors, capacities, and occupancy states. It does not require a database or external server.
+
+## 2. Objectives
+
+- Display the university building from the ground floor through the fifth floor.
+- Show every required classroom in a clearly identifiable colored box.
+- Use red to represent an occupied classroom and green to represent a free classroom.
+- Let students browse classrooms and view status and capacity.
+- Let authorized professors change the selected classroom's status.
+- Provide a reset action that makes every classroom free.
+
+## 3. Functional Requirements
+
+| Floor | Rooms or area | Capacity |
+|---|---|---|
+| Ground | CR-1, CR-2, CR-3, CR-4, CR-5 | 150 |
+| First | Staff room area only; no classroom boxes | Not applicable |
+| Second | 201, 202, 203, 204 | 90 |
+| Third | 301, 302, 303, 304, 305, 306 | 90 |
+| Fourth | 401, 402, 403, 404, 405 | 90 |
+| Fifth | 501, 502, 503, 504 | 90 |
+
+The status colors are applied to the complete classroom box:
+
+- Red: occupied
+- Green: free
+
+## 4. System Architecture
+
+The project follows a simple separation of concerns:
+
+```text
+src/main/java/com/iamanshu/university
+|-- App.java
+|-- model
+|   |-- Classroom.java
+|   `-- UniversityMapModel.java
+`-- ui
+    `-- UniversityMapFrame.java
+```
+
+This structure separates application startup, data management, and user-interface behavior.
+
+## 5. Code Explanation
+
+### `App.java`
+
+`App` is the application entry point. Its `main` method starts a Swing event on the Event Dispatch Thread using `SwingUtilities.invokeLater`. It selects the system look-and-feel and creates `UniversityMapFrame`.
+
+### `Classroom.java`
+
+`Classroom` represents one room. It stores:
+
+- The room name, such as `CR-1` or `302`
+- The floor name
+- The seating capacity
+- Whether the room is currently occupied
+
+It exposes methods to read room details, change occupancy, toggle occupancy, and produce the display text `Occupied` or `Free`.
+
+### `UniversityMapModel.java`
+
+`UniversityMapModel` creates and owns all classroom objects. Its constructor initializes the floors and required rooms. It provides methods to:
+
+- Retrieve rooms by floor
+- Retrieve a room by name
+- Toggle a room
+- Reset every room to free
+- Report the total room count
+
+The initial statuses are sensible demo values. Reopening the application restores these statuses.
+
+### `UniversityMapFrame.java`
+
+`UniversityMapFrame` builds the desktop GUI:
+
+- A title and color legend appear at the top.
+- A scrollable building view displays the floors from fifth to ground.
+- The first floor contains a clearly labeled staff-room area.
+- Classroom buttons use fully painted red or green backgrounds.
+- Clicking a classroom updates the detail panel with floor, room, status, and capacity.
+- The control area accepts a professor ID and provides toggle/reset actions.
+
+The classroom button override paints the complete button area, which prevents some Swing look-and-feels from reducing the status color to a border or text area.
+
+## 6. Professor Authorization
+
+Students can browse and select rooms without entering an ID. A status change requires a demo professor ID.
+
+Authorized IDs:
+
+- `PROF001`
+- `PROF2026`
+
+To change occupancy:
+
+1. Click a classroom box.
+2. Enter an authorized professor ID.
+3. Click **Toggle Selected**.
+
+The toggling code changes only the selected room's state. Unauthorized IDs display a warning and do not alter room status.
+
+## 7. Usage
+
+### Select a classroom
+
+Click any green or red classroom box. The lower detail panel shows its floor, name, status, and capacity.
+
+### Interpret status
+
+- Green fill: the room is free.
+- Red fill: the room is occupied.
+
+### Reset the building
+
+Click **Reset All to Free** to set every classroom to free without requiring authorization.
+
+## 8. Requirements
 
 - Java 17 or newer
-- Maven 3.8 or newer
+- Maven 3.8 or newer for Maven builds
+- A desktop environment that supports Swing
 
-## Run
+## 9. Build and Run
+
+Run the test suite:
 
 ```powershell
 mvn clean test
+```
+
+Build the executable JAR:
+
+```powershell
 mvn clean package
+```
+
+Run the application:
+
+```powershell
 java -jar target\university-classroom-map-1.0-SNAPSHOT.jar
 ```
 
-Students can browse and select classroom boxes. Professor status changes require a demo professor ID:
-`PROF001` or `PROF2026`. Select a classroom, enter an authorized ID, then click **Toggle Selected**.
+For a JDK-only build, the main sources can also be compiled with:
+
+```powershell
+javac -d out src/main/java/com/iamanshu/university/model/*.java src/main/java/com/iamanshu/university/ui/*.java src/main/java/com/iamanshu/university/App.java
+java -cp out com.iamanshu.university.App
+```
+
+## 10. Testing
+
+The focused JUnit tests verify:
+
+- Every floor has the correct number of classroom boxes.
+- The first floor has no classroom boxes.
+- Ground classrooms use capacity 150.
+- Second-floor classrooms use capacity 90.
+- A valid classroom toggle changes its occupancy state.
+- Reset changes every classroom to free.
+- An unknown room cannot be toggled.
+
+## 11. Presentation
+
+The repository includes `University_Classroom_Map_Presentation.pptx`, a classroom-ready presentation derived from this documentation. It covers the project overview, objectives, requirements, architecture, GUI flow, status logic, code responsibilities, testing, demonstration, and future enhancements.

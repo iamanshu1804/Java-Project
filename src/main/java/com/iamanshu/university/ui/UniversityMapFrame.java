@@ -19,6 +19,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.Set;
 
 public class UniversityMapFrame extends JFrame {
@@ -94,9 +97,23 @@ public class UniversityMapFrame extends JFrame {
     }
 
     private JButton createClassroomBox(Classroom classroom) {
-        JButton box = new JButton(classroom.getName());
-        box.setOpaque(true);
-        box.setContentAreaFilled(true);
+        JButton box = new JButton(classroom.getName()) {
+            @Override
+            protected void paintComponent(Graphics graphics) {
+                Graphics2D g2 = (Graphics2D) graphics.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setColor(Color.DARK_GRAY);
+                g2.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+                g2.dispose();
+                super.paintComponent(graphics);
+            }
+        };
+        box.setOpaque(false);
+        box.setContentAreaFilled(false);
+        box.setBorderPainted(false);
         box.setPreferredSize(new Dimension(90, 58));
         box.setFont(box.getFont().deriveFont(Font.BOLD, 13f));
         box.setForeground(Color.WHITE);

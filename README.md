@@ -169,3 +169,55 @@ The focused JUnit tests verify:
 ## 11. Presentation
 
 The repository includes `University_Classroom_Map_Presentation.pptx`, a classroom-ready presentation derived from this documentation. It covers the project overview, objectives, requirements, architecture, GUI flow, status logic, code responsibilities, testing, demonstration, and future enhancements.
+
+## 12. Web Portal
+
+The repository also includes a responsive website under `web/`. It uses the same classroom and floor requirements while adding schedule data and role-based login.
+
+### Web features
+
+- Real-time date and clock display
+- Date/time picker for past or future inspection
+- One-hour backward and forward controls
+- Multiple branches and sections with professor and subject details
+- Dynamic red/green building map at the selected date and time
+- Professor and student login roles
+- Professor-only occupancy override and reset controls
+- Student view-only classroom browsing
+- Responsive layout for desktop and mobile screens
+
+### Demo accounts
+
+| Role | Username | Password |
+|---|---|---|
+| Professor | `professor` | `professor123` |
+| Student | `student` | `student123` |
+
+### Run the web portal
+
+```powershell
+cd web
+npm start
+```
+
+Open `http://localhost:4173`.
+
+The portal is dependency-free. It uses browser JavaScript modules and a minimal Node.js static-file server. The schedule is imaginary demo data; it contains weekday entries across branches CSE, ECE, ME, and IT.
+
+### Fast-forward through time
+
+Use **+1 hr** or **-1 hr** to move the selected date and time. The datetime picker can inspect any past or future date. Classroom occupancy is recalculated at every control change:
+
+- Red: an active schedule entry occupies the room, or a professor manually overrides it occupied.
+- Green: no active schedule entry is assigned at the selected time.
+
+Manual professor overrides are temporary browser-session changes and reset when the page reloads or by clicking **Reset Manual Overrides**.
+
+### Web tests
+
+```powershell
+cd web
+npm test
+```
+
+The tests cover all floor and room counts, capacity values, active schedule lookup, and weekend behavior.

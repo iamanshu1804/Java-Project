@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>University Classroom Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">UC</span>
+      <div><strong>University Portal</strong><small>Classroom Availability</small></div>
+    </div>
+    <div class="header-actions">
+      <div id="liveClock" class="clock" aria-live="polite"></div>
+      <button id="loginButton" class="button secondary" type="button">Professor / Student Login</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <aside class="control-panel">
+      <section>
+        <p class="eyebrow">View controls</p>
+        <h1>Building status</h1>
+        <label for="dateTime">Selected date and time</label>
+        <input id="dateTime" type="datetime-local">
+        <div class="time-actions">
+          <button class="button secondary" type="button" data-offset="-60">-1 hr</button>
+          <button class="button secondary" type="button" id="nowButton">Now</button>
+          <button class="button secondary" type="button" data-offset="60">+1 hr</button>
+        </div>
+      </section>
+
+      <section class="legend">
+        <span><i class="dot free"></i> Free</span>
+        <span><i class="dot occupied"></i> Occupied</span>
+        <span><i class="dot staff"></i> Staff area</span>
+      </section>
+
+      <section id="classDetails" class="details" aria-live="polite">
+        <p class="eyebrow">Selected classroom</p>
+        <h2 id="detailsName">Select a room</h2>
+        <p id="detailsStatus">No room selected</p>
+        <div id="detailsGrid" class="details-grid"></div>
+        <div id="professorActions" class="professor-actions" hidden>
+          <button id="toggleButton" class="button" type="button">Toggle Occupancy</button>
+          <button id="resetButton" class="button secondary" type="button">Reset Manual Overrides</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="map-column">
+      <div class="map-heading">
+        <div>
+          <p class="eyebrow">Live campus view</p>
+          <h2 id="viewHeading">Classroom map</h2>
+        </div>
+        <div id="roleBadge" class="role-badge">Student view</div>
+      </div>
+      <div id="buildingMap" class="building-map"></div>
+    </section>
+  </main>
+
+  <dialog id="loginDialog">
+    <form id="loginForm" method="dialog">
+      <button class="dialog-close" value="cancel" aria-label="Close">&times;</button>
+      <p class="eyebrow">Demo access</p>
+      <h2>Sign in</h2>
+      <label for="username">Username</label>
+      <input id="username" autocomplete="username" placeholder="professor or student" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="professor123 / student123" required>
+      <p id="loginError" class="login-error" role="alert"></p>
+      <button class="button full" type="submit">Sign in</button>
+      <p class="demo-accounts">Professor: <code>professor / professor123</code><br>Student: <code>student / student123</code></p>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -212,11 +212,7 @@ The focused JUnit tests verify:
 - Reset changes every classroom to free.
 - An unknown room cannot be toggled.
 
-## 12. Presentation
-
-The repository includes `University_Classroom_Map_Presentation.pptx`, a classroom-ready presentation derived from this documentation. It covers the project overview, objectives, requirements, architecture, GUI flow, status logic, code responsibilities, testing, demonstration, and future enhancements.
-
-## 13. Web Portal
+## 12. Web Portal
 
 The repository also includes a responsive website under `web/`. It uses the same classroom and floor requirements while adding schedule data and role-based login.
 

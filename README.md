@@ -2,11 +2,26 @@
 
 ## 1. Project Overview
 
-The University Classroom Map is a Java desktop application that presents an imaginative front view of a university building. It helps students and professors quickly browse all floors and determine whether a classroom is occupied or free.
+The University Classroom Map project provides two complementary interfaces for checking university classroom availability:
 
-The application uses Java Swing for the graphical interface and a small in-memory model to store classroom numbers, floors, capacities, and occupancy states. It does not require a database or external server.
+- A Java Swing desktop application with an in-memory classroom model.
+- A responsive browser portal under `web/` with schedule-based availability, date/time inspection, and demo role-based controls.
 
-## 2. Objectives
+Both interfaces model the same six-floor building and classroom capacities. Neither interface requires a database or a production backend.
+
+## 2. Current Implementation and Recent Changes
+
+The current project includes:
+
+- The original Java Swing map with classroom selection, capacity/status details, professor authorization, and reset controls.
+- A responsive web portal with desktop and mobile layouts.
+- Weekday schedule data for CSE, ECE, ME, and IT branches, including sections, subjects, and professors.
+- Occupancy calculated for the selected date and time, plus temporary professor overrides for the current browser session.
+- Demo professor and student login flows. The login dialog includes a working close control.
+
+The web portal is a dependency-free Node.js static server and browser application. Its schedule and credentials are demonstration data only; no data is persisted after the page is reloaded.
+
+## 3. Objectives
 
 - Display the university building from the ground floor through the fifth floor.
 - Show every required classroom in a clearly identifiable colored box.
@@ -15,7 +30,7 @@ The application uses Java Swing for the graphical interface and a small in-memor
 - Let authorized professors change the selected classroom's status.
 - Provide a reset action that makes every classroom free.
 
-## 3. Functional Requirements
+## 4. Functional Requirements
 
 | Floor | Rooms or area | Capacity |
 |---|---|---|
@@ -31,7 +46,7 @@ The status colors are applied to the complete classroom box:
 - Red: occupied
 - Green: free
 
-## 4. System Architecture
+## 5. System Architecture
 
 The project follows a simple separation of concerns:
 
@@ -47,7 +62,22 @@ src/main/java/com/iamanshu/university
 
 This structure separates application startup, data management, and user-interface behavior.
 
-## 5. Code Explanation
+The web portal is organized as:
+
+```text
+web
+|-- index.html
+|-- styles.css
+|-- app.js
+|-- schedule.js
+|-- server.js
+`-- tests
+    `-- schedule.test.js
+```
+
+`index.html` and `styles.css` define the portal layout, `app.js` manages rendering and interaction, `schedule.js` contains floor/account/schedule data and availability lookup, and `server.js` serves the static files locally.
+
+## 6. Code Explanation
 
 ### `App.java`
 
@@ -89,7 +119,13 @@ The initial statuses are sensible demo values. Reopening the application restore
 
 The classroom button override paints the complete button area, which prevents some Swing look-and-feels from reducing the status color to a border or text area.
 
-## 6. Professor Authorization
+### Web portal files
+
+- `web/app.js` renders the selected date/time, building map, room details, login state, and professor actions.
+- `web/schedule.js` defines the floor map, capacities, demo accounts, weekday schedule entries, and `findActiveEntry`.
+- `web/server.js` serves the portal without a framework or external service.
+
+## 7. Professor Authorization
 
 Students can browse and select rooms without entering an ID. A status change requires a demo professor ID.
 
@@ -106,7 +142,7 @@ To change occupancy:
 
 The toggling code changes only the selected room's state. Unauthorized IDs display a warning and do not alter room status.
 
-## 7. Usage
+## 8. Usage
 
 ### Select a classroom
 
@@ -121,13 +157,14 @@ Click any green or red classroom box. The lower detail panel shows its floor, na
 
 Click **Reset All to Free** to set every classroom to free without requiring authorization.
 
-## 8. Requirements
+## 9. Requirements
 
 - Java 17 or newer
 - Maven 3.8 or newer for Maven builds
 - A desktop environment that supports Swing
+- Node.js 18 or newer for the web portal
 
-## 9. Build and Run
+## 10. Build and Run
 
 Run the test suite:
 
@@ -154,7 +191,16 @@ javac -d out src/main/java/com/iamanshu/university/model/*.java src/main/java/co
 java -cp out com.iamanshu.university.App
 ```
 
-## 10. Testing
+### Run the web portal
+
+```powershell
+cd web
+npm start
+```
+
+Open `http://localhost:4173`. The server uses the `PORT` environment variable when one is provided.
+
+## 11. Testing
 
 The focused JUnit tests verify:
 
@@ -166,11 +212,11 @@ The focused JUnit tests verify:
 - Reset changes every classroom to free.
 - An unknown room cannot be toggled.
 
-## 11. Presentation
+## 12. Presentation
 
 The repository includes `University_Classroom_Map_Presentation.pptx`, a classroom-ready presentation derived from this documentation. It covers the project overview, objectives, requirements, architecture, GUI flow, status logic, code responsibilities, testing, demonstration, and future enhancements.
 
-## 12. Web Portal
+## 13. Web Portal
 
 The repository also includes a responsive website under `web/`. It uses the same classroom and floor requirements while adding schedule data and role-based login.
 
@@ -193,16 +239,7 @@ The repository also includes a responsive website under `web/`. It uses the same
 | Professor | `professor` | `professor123` |
 | Student | `student` | `student123` |
 
-### Run the web portal
-
-```powershell
-cd web
-npm start
-```
-
-Open `http://localhost:4173`.
-
-The portal is dependency-free. It uses browser JavaScript modules and a minimal Node.js static-file server. The schedule is imaginary demo data; it contains weekday entries across branches CSE, ECE, ME, and IT.
+The portal is dependency-free. It uses browser JavaScript modules and a minimal Node.js static-file server. The schedule is imaginary demo data with weekday entries across branches CSE, ECE, ME, and IT.
 
 ### Fast-forward through time
 

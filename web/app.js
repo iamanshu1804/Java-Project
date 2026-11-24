@@ -157,6 +157,11 @@ document.querySelector("#loginButton").addEventListener("click", () => {
   }
 });
 
+document.querySelector("#dialogClose").addEventListener("click", () => {
+  document.querySelector("#loginError").textContent = "";
+  loginDialog.close();
+});
+
 document.querySelector("#loginForm").addEventListener("submit", event => {
   event.preventDefault();
   const username = document.querySelector("#username").value.trim().toLowerCase();
